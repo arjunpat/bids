@@ -21,8 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 
-import auth from './routes/auth';
-app.use('/auth', auth);
+import auth from './routes/accounts';
+app.use('/accounts', auth);
 
 app.all('*', (_, res) => {
   res.status(404).send({

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as responses from '../lib/responses';
 const router = Router();
 
+import { Request } from '../types';
 import conn from '../lib/Mongo';
 const db = conn.db;
 
@@ -15,8 +16,8 @@ import { JWT_SECRET, NODE_ENV } from '../lib/config';
 /*
 USER schema:
 {
-  first_name: String,
-  last_name: String,
+  firstName: String,
+  lastName: String,
   phone: String,
   photo: String,
   loginCode: { // valid for 5 mins
@@ -45,7 +46,7 @@ router.post('/send-code', async (req, res) => {
   let user = await db.collection('users').findOne({ phone });
   let newUser;
   if (user) {
-    newUser = user.newUser;
+    newUser = !!user.newUser;
     await db.collection('users').updateOne({ _id: user._id }, { $set: { loginCode } });
   } else {
     newUser = true;
@@ -57,7 +58,7 @@ router.post('/send-code', async (req, res) => {
   }
 
   // send login code
-  const message = `Whitelisted: Your login code is ${loginCode.code}.`;
+  const message = `Bids: Your login code is ${loginCode.code}.`;
   const body = {
     To: phone,
     MessagingServiceSid: process.env.TWILIO_SERVICE_SID,
@@ -102,8 +103,8 @@ router.post('/login', async (req, res) => {
     $unset: { loginCode: '' }
   });
 
-  const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '7 days' });
-  res.cookie('list_', token, {
+  const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7 days' });
+  res.cookie('bids_', token, {
     maxAge: 7 * 60 * 60 * 1000, // 3 days
     sameSite: NODE_ENV === 'production' ? 'none' : undefined,
     secure: NODE_ENV === 'production' ? true : undefined,
@@ -111,5 +112,26 @@ router.post('/login', async (req, res) => {
 
   res.send(responses.success());
 });
+
+router.post('/set-name', async (req: Request, res) => {
+  const { firstName, lastName } = req.body;
+  if (!firstName || !lastName) return res.send(responses.error('Missing required field(s)'));
+
+  await db.collection('users').updateOne({ _id: req._id }, {
+    $set: {
+      firstName,
+      lastName
+    },
+    $unset: { newUser: '' }
+  });
+
+  res.send(responses.success());
+});
+
+router.post('/set-photo', (req: Request, res) => {
+  // TODO
+  // we can do this later tbh cause this will be annoying to implement
+});
+
 
 export default router;

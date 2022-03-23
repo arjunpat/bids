@@ -1,5 +1,5 @@
 import express from 'express';
 
 export interface Request extends express.Request { 
-  uid: string
+  _id: string
 }

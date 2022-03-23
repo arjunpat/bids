@@ -8,7 +8,7 @@ import { JWT_SECRET } from "./config";
 export function auth(req: Request, res: Response, next: NextFunction) {
   try {
     let contents: any = jwt.verify(req.cookies.bids_, JWT_SECRET);
-    req.uid = contents.uid;
+    req._id = contents._id;
     next();
   } catch (e) {
     res.status(403).send(responses.error("cookie"));

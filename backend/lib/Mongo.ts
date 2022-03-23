@@ -8,7 +8,7 @@ class Mongo {
   public constructor(uri, db) {
     this.client = new MongoClient(uri);
     this.db = this.client.db(db);
-    this.client.connect();
+    this.client.connect().then(() => console.log('Connected to MongoDB'));
   }
 }
 
