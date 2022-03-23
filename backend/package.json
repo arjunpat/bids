@@ -14,8 +14,11 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "google-libphonenumber": "^3.2.27",
     "helmet": "^5.0.2",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.4.1",
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",

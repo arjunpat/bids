@@ -14,7 +14,7 @@
     "noImplicitReturns": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "strictFunctionTypes": false
+    "strictFunctionTypes": false,
   },
   "files": ["server.ts"],
   "lib": ["es2015"]
